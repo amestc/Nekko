@@ -42,7 +42,7 @@ public class Address {
     
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_usuario", nullable = false)
-    private User usuario;
+    private EntityUser usuario;
     
     @CreationTimestamp
     @Column(name = "created_at", updatable = false)

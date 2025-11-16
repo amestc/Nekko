@@ -1,94 +1,101 @@
 package dev.nekko.LogicBackendNekko.Controller;
 
 import dev.nekko.LogicBackendNekko.Model.User;
+import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-
-import org.springframework.web.bind.annotation.RestController;
+import java.util.Optional;
 
 @RestController
+@RequestMapping("/api/users")
 public class UserController {
 
-    private List<User> usuarios;
-    private int proximoId;
+    private List<User> users = new ArrayList<>();
+    private Long nextId = 1L;
 
-    public void UserControler() {
-        this.usuarios = new ArrayList<>();
-        this.proximoId = 1;
+    // GET - Listar todos os usuários
+    @GetMapping
+    public List<User> getAllUsers() {
+        System.out.println("Listando todos os usuários: " + users);
+        return users;
     }
 
-    public boolean cadastrarUsuario(String nome, String email, String senha) {
-        if (nome == null || nome.trim().isEmpty()) {
-            System.out.println("Nome não pode ser vazio!");
-            return false;
-        }
-
-        if (email == null || email.trim().isEmpty()) {
-            System.out.println("Email não pode ser vazio!");
-            return false;
-        }
-
-        if (senha == null || senha.length() < 6) {
-            System.out.println("Senha deve ter pelo menos 6 caracteres!");
-            return false;
-        }
-
-        if (emailExiste(email)) {
-            System.out.println("Email já cadastrado!");
-            return false;
-        }
-
-        User usuario = new User(nome, email, senha);
-        usuario.setId(proximoId++);
-        usuarios.add(usuario);
-
-        System.out.println("Usuário cadastrado com sucesso!");
-        return true;
+    // GET - Buscar usuário por ID
+    @GetMapping("/{id}")
+    public User getUserById(@PathVariable Long id) {
+        Optional<User> user = users.stream().filter(u -> u.getId().equals(id)).findFirst();
+        System.out.println("Buscando usuário ID " + id + ": " + user.orElse(null));
+        return user.orElse(null);
     }
 
-    private boolean emailExiste(String email) {
-        for (User usuario : usuarios) {
-            if (usuario.getEmail().equalsIgnoreCase(email)) {
-                return true;
-            }
-        }
-        return false;
+    // POST - Criar novo usuário
+    @PostMapping
+    public User createUser(@RequestBody User user) {
+        user.setId(nextId++);
+        user.setCreatedAt(LocalDateTime.now());
+        user.setUpdatedAt(LocalDateTime.now());
+        user.setAtivo(true);
+        users.add(user);
+        System.out.println("Usuário criado: " + user);
+        return user;
     }
 
-    public void listarUsuarios() {
-        if (usuarios.isEmpty()) {
-            System.out.println("Nenhum usuário cadastrado.");
-            return;
-        }
+    // PUT - Atualizar usuário
+    @PutMapping("/{id}")
+    public User updateUser(@PathVariable Long id, @RequestBody User userDetails) {
+        Optional<User> userOptional = users.stream().filter(u -> u.getId().equals(id)).findFirst();
 
-        System.out.println("\n=== LISTA DE USUÁRIOS ===");
-        for (User usuario : usuarios) {
-            System.out.println(usuario);
+        if (userOptional.isPresent()) {
+            User user = userOptional.get();
+            user.setUsername(userDetails.getUsername());
+            user.setCpf(userDetails.getCpf());
+            user.setEmail(userDetails.getEmail());
+            user.setTelefone(userDetails.getTelefone());
+            user.setSenha(userDetails.getSenha());
+            user.setDataNascimento(userDetails.getDataNascimento());
+            user.setUpdatedAt(LocalDateTime.now());
+            System.out.println("Usuário atualizado: " + user);
+            return user;
         }
-    }
-
-    public User buscarUsuarioPorEmail(String email) {
-        for (User usuario : usuarios) {
-            if (usuario.getEmail().equalsIgnoreCase(email)) {
-                return usuario;
-            }
-        }
+        System.out.println("Usuário não encontrado para atualização ID: " + id);
         return null;
     }
 
-    public boolean autenticarUsuario(String email, String senha) {
-        User usuario = buscarUsuarioPorEmail(email);
-        if (usuario != null && usuario.getSenha().equals(senha)) {
-            System.out.println("Usuário autenticado com sucesso!");
-            return true;
+    // DELETE - Deletar usuário (desativar)
+    @DeleteMapping("/{id}")
+    public String deleteUser(@PathVariable Long id) {
+        Optional<User> userOptional = users.stream().filter(u -> u.getId().equals(id)).findFirst();
+
+        if (userOptional.isPresent()) {
+            User user = userOptional.get();
+            user.setAtivo(false);
+            user.setUpdatedAt(LocalDateTime.now());
+            System.out.println("Usuário desativado: " + user);
+            return "Usuário desativado com sucesso";
         }
-        System.out.println("Email ou senha incorretos!");
-        return false;
+        System.out.println("Usuário não encontrado para deleção ID: " + id);
+        return "Usuário não encontrado";
     }
 
-    public List<User> getUsuarios() {
-        return new ArrayList<>(usuarios); // Retorna cópia para evitar modificações externas
+    // GET - Buscar usuário por username
+    @GetMapping("/username/{username}")
+    public User getUserByUsername(@PathVariable String username) {
+        Optional<User> user = users.stream()
+                .filter(u -> u.getUsername().equalsIgnoreCase(username))
+                .findFirst();
+        System.out.println("Buscando usuário por username '" + username + "': " + user.orElse(null));
+        return user.orElse(null);
     }
 
+    // GET - Buscar usuário por email
+    @GetMapping("/email/{email}")
+    public User getUserByEmail(@PathVariable String email) {
+        Optional<User> user = users.stream()
+                .filter(u -> u.getEmail().equalsIgnoreCase(email))
+                .findFirst();
+        System.out.println("Buscando usuário por email '" + email + "': " + user.orElse(null));
+        return user.orElse(null);
+    }
 }

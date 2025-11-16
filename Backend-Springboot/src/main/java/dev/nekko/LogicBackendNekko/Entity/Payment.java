@@ -43,7 +43,7 @@ public class Payment {
     
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_usuario", nullable = false)
-    private User usuario;
+    private EntityUser usuario;
     
     @Column(nullable = false)
     private Boolean ativo = true;
