@@ -34,9 +34,6 @@ public class Announcement {
     @JoinColumn(name = "id_produto", nullable = false)
     private Product produto;
     
-    @Column
-    private Integer visualizacoes = 0;
-    
     @CreationTimestamp
     @Column(name = "created_at", updatable = false)
     private LocalDateTime createdAt;

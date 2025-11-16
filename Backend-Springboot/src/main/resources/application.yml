@@ -1,0 +1,19 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://db.vweidjzoufwizhgkmuyj.supabase.co:5432/postgres?
+    username: postgres
+    password: r4v3l4DM1N#
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+  web:
+    resources:
+      static-locations: file:../
+
+server:
+  port: 8080
+
+logging:
+  level:
+    org.springframework: INFO

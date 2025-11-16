@@ -1,25 +1,16 @@
 package dev.nekko.LogicBackendNekko.Controller;
 
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.servlet.ModelAndView;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
-import javax.servlet.http.HttpServletRequest;
-import java.io.File;
+@Configuration
+public class FrontInit implements WebMvcConfigurer {
 
-@Controller
-public class FrontInit {
-
-    @GetMapping("/")
-    public ModelAndView serveIndex(HttpServletRequest request) {
-        File indexFile = new File("index.html");
-
-        if (indexFile.exists()) {
-            // Retorna o arquivo diretamente
-            return new ModelAndView("forward:/custom-index.html");
-        }
-
-        // Fallback para página padrão
-        return new ModelAndView("index");
+    @Override
+    public void addResourceHandlers(ResourceHandlerRegistry registry) {
+        // Serve arquivos da raiz do projeto Nekko
+        registry.addResourceHandler("/**")
+                .addResourceLocations("file:../");
     }
 }

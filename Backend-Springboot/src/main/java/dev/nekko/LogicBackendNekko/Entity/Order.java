@@ -35,7 +35,7 @@ public class Order {
     
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_user_comprador", nullable = false)
-    private User comprador;
+    private EntityUser comprador;
     
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_endereco_entrega", nullable = false)

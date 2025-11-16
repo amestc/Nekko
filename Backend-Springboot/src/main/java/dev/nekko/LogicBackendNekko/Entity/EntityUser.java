@@ -11,7 +11,7 @@ import java.util.UUID;
 
 @Entity
 @Table(name = "usuarios")
-public class User {
+public class EntityUser {
     
     @Id
     @GeneratedValue(generator = "UUID")
@@ -51,9 +51,9 @@ public class User {
     private LocalDateTime updatedAt;
     
     // Construtores
-    public User() {}
+    public EntityUser() {}
     
-    public User(String nome, String cpf, LocalDate dataNascimento, String email, String senhaHash) {
+    public EntityUser(String nome, String cpf, LocalDate dataNascimento, String email, String senhaHash) {
         this.nome = nome;
         this.cpf = cpf;
         this.dataNascimento = dataNascimento;
