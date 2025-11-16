@@ -9,12 +9,6 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 import Placeholder from "./pages/Placeholder";
-import Login from "./pages/Login";
-import SignUp from "./pages/SignUp";
-import PasswordRecovery from "./pages/PasswordRecovery";
-import Peripherals from "./pages/Peripherals";
-import ProductListing from "./pages/ProductListing";
-import ProductDetails from "./pages/ProductDetails";
 
 const queryClient = new QueryClient();
 
@@ -26,12 +20,6 @@ const App = () => (
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Index />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/cadastro" element={<SignUp />} />
-          <Route path="/recuperar-senha" element={<PasswordRecovery />} />
-          <Route path="/perifericos" element={<Peripherals />} />
-          <Route path="/produtos/:category" element={<ProductListing />} />
-          <Route path="/produto/:id" element={<ProductDetails />} />
           <Route path="/sobre" element={<Placeholder title="Sobre" />} />
           <Route path="/ajuda" element={<Placeholder title="Ajuda" />} />
           <Route path="/contato" element={<Placeholder title="Contato" />} />
